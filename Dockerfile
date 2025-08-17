@@ -18,7 +18,6 @@ RUN cd client && npm install --legacy-peer-deps --loglevel=error
 COPY . .
 
 # Build do front-end com Vite
-RUN cd client && VITE_API_URL=http://localhost:3001 npm run build
 RUN cd client && VITE_API_URL="" npm run build
 
 # Limpeza das dependências de desenvolvimento do client para reduzir tamanho
