@@ -1,8 +1,7 @@
 FROM public.ecr.aws/docker/library/node:22-slim
 RUN npm install -g npm@11 --loglevel=error
-
-# Instalando curl
-RUN cd client && npm ci --legacy-peer-deps --no-audit --no-fund --loglevel=error
+RUN apt-get update && apt-get install -y curl python3 make g++ \
+ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
@@ -12,7 +11,7 @@ RUN npm ci --no-audit --no-fund --loglevel=error
 
 # Copiar package.json do client e instalar dependências (incluindo devDependencies para build)
 COPY client/package*.json ./client/
-RUN cd client && npm install --legacy-peer-deps --loglevel=error
+RUN cd client && npm ci --legacy-peer-deps --no-audit --no-fund --loglevel=error
 
 # Copiar todos os arquivos
 COPY . .
@@ -24,5 +23,4 @@ RUN cd client && VITE_API_URL="" npm run build
 RUN cd client && npm prune --production && rm -rf node_modules/.cache
 
 EXPOSE 8080
-
 CMD [ "npm", "start" ]

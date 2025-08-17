@@ -5,20 +5,12 @@ const VersionInfo = () => {
   const [apiStatus, setApiStatus] = useState('checking'); // 'checking', 'online', 'offline'
   const [apiVersion, setApiVersion] = useState('4.0.0');
 
-  const getApiUrl = () => {
-    // Se estiver definido no ambiente (Docker/Produção)
-    if (import.meta.env.VITE_API_URL) {
-      return import.meta.env.VITE_API_URL;
-    }
-    
-    // Se estiver rodando no mesmo domínio (produção integrada)
-    if (window.location.port === '8080') {
-      return window.location.origin;
-    }
-    
-    // Desenvolvimento local - inferir porta 8080
-    return import.meta.env.VITE_API_URL || "http://localhost:8080";
-  };
+const getApiUrl = () => {
+  // Em produção, queremos que apiUrl seja "" (string vazia),
+  // para as chamadas virarem "/api/...".
+  // Em desenvolvimento, você pode setar VITE_API_URL se quiser.
+  return import.meta.env.VITE_API_URL || "";
+};
 
   const checkApiHealth = async () => {
     setApiStatus('checking');
