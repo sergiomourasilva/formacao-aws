@@ -2,13 +2,13 @@ FROM public.ecr.aws/docker/library/node:22-slim
 RUN npm install -g npm@11 --loglevel=error
 
 # Instalando curl
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN cd client && npm ci --legacy-peer-deps --no-audit --no-fund --loglevel=error
 
 WORKDIR /usr/src/app
 
 # Copiar package.json raiz primeiro
 COPY package*.json ./
-RUN npm install --loglevel=error
+RUN npm ci --no-audit --no-fund --loglevel=error
 
 # Copiar package.json do client e instalar dependências (incluindo devDependencies para build)
 COPY client/package*.json ./client/
@@ -19,6 +19,7 @@ COPY . .
 
 # Build do front-end com Vite
 RUN cd client && VITE_API_URL=http://localhost:3001 npm run build
+RUN cd client && VITE_API_URL="" npm run build
 
 # Limpeza das dependências de desenvolvimento do client para reduzir tamanho
 RUN cd client && npm prune --production && rm -rf node_modules/.cache
