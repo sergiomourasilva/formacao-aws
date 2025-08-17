@@ -17,7 +17,7 @@ const VersionInfo = () => {
     }
     
     // Desenvolvimento local - inferir porta 8080
-    return 'http://localhost:8080';
+    return import.meta.env.VITE_API_URL || "http://localhost:8080";
   };
 
   const checkApiHealth = async () => {
